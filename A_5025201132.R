@@ -14,7 +14,7 @@ sd
 #1.b
 t.test(data$kso.sesudah, data$kso.sebelum, paired = TRUE)
 
-#c
+#1.c
 t.test(data$kso.sesudah, data$kso.sebelum, paired = TRUE, 
        alternative = "two.sided", conf.level = 0.95)
 
@@ -49,8 +49,8 @@ qqline(Group1$Length)
 qqnorm(Group2$Length)
 qqline(Group2$Length)
 
-qqnorm(Group2$Length)
-qqline(Group2$Length)
+qqnorm(Group3$Length)
+qqline(Group3$Length)
 
 #4.b
 bartlett.test(Length ~ Group, data = my_data)
