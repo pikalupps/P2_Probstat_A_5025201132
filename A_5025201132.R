@@ -41,7 +41,9 @@ plotDist(dist = 't', df = 2)
 qchisq(p = 0.05, df = 2, lower.tail = FALSE)
 
 #Nomor 4
-my_data <- read.delim(file.choose())
+my_data <- read.table("data_no4.txt", h = T)
+attach(my_data)
+names(my_data)
 
 my_data$Group = as.factor(my_data$Group)
 my_data$Group = factor(my_data$Group,labels = c("kucing oren", "kucing hitam", "kucing putih"))
@@ -83,3 +85,41 @@ ggplot(my_data, aes(x = Group, y = Length)) +
   scale_x_discrete() + xlab("spesies") +
   ylab("panjang")
 
+#Nomor 5
+#5.a
+install.packages("multcompView")
+library(readr)
+library(ggplot2)
+library(multcompView)
+library(dplyr)
+
+my.data <- read_csv("data_no5.csv")
+
+qplot(x = Temp, y = Light, geom = "point", data = my.data) + facet_grid(.~Glass, labeller = label_both)
+
+#5.b
+my.data$Glass <- as.factor(my.data$Glass)
+my.data$Temp_Factor <- as.factor(my.data$Temp)
+
+anova <- aov(Light ~ Glass*Temp_Factor, data = my.data)
+summary(anova)
+
+#5.c
+data.sum <- group_by(my.data, Glass, Temp) %>%
+  summarise(mean = mean(Light), sd = sd(Light)) %>%
+  arrange(desc(mean))
+
+print(data.sum)
+
+#5.d
+TukeyHSD(anova)
+
+#5.e
+tukey.cld <- multcompLetters4(anova, tukey)
+print(tukey.cld)
+
+cld <- as.data.frame.list(tukey.cld$`Glass:Temp_Factor`)
+data.sum$Tukey <- cld$Letters
+print(data.sum)
+
+write.csv("GTL_sum.csv")
