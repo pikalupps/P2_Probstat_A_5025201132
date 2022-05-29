@@ -24,11 +24,21 @@ zsum.test(mean.x=23500, sigma.x = 3900, n.x = 100,
           alternative = "greater", mu = 20000)
 
 #Nomor 3
+#3.b
 tsum.test(mean.x=3.64, s.x = 1.67, n.x = 19, 
           mean.y =2.79 , s.y = 1.32,
           n.y = 27, alternative = "two.sided", 
           mu = 0, var.equal = TRUE,
           conf.level = 0.95)
+
+#3.c
+install.packages("mosaic")
+library(mosaic)
+
+plotDist(dist = 't', df = 2)
+
+#3.d
+qchisq(p = 0.05, df = 2, lower.tail = FALSE)
 
 #Nomor 4
 my_data <- read.delim(file.choose())
@@ -72,3 +82,4 @@ ggplot(my_data, aes(x = Group, y = Length)) +
   geom_boxplot(fill = "lightblue", colour = "black") +
   scale_x_discrete() + xlab("spesies") +
   ylab("panjang")
+
