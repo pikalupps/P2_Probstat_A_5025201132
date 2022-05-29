@@ -45,6 +45,10 @@ c. p-value < 2.2e-16 atau sekitar 0, Dari hasil tersebut dapat menolak hipotesis
 mobil dikendarai rata-rata lebih dari 20.000 kilometer per tahun
 
 ## Soal 3
+a. H0 : tidak ada perbedaan pada rata-ratanya
+H1:  ada perbedaan pada rata-ratanya
+
+b.
 ```R
 tsum.test(mean.x=3.64, s.x = 1.67, n.x = 19, 
           mean.y =2.79 , s.y = 1.32,
@@ -54,11 +58,24 @@ tsum.test(mean.x=3.64, s.x = 1.67, n.x = 19,
 ```
 ![](img/3a.jpg)
 
+c.
+```R
+plotDist(dist = 't', df = 2)
+```
+![](img/3b.jpg)
+
+d.
+```R
+qchisq(p = 0.05, df = 2, lower.tail = FALSE)
+```
+![](img/3c.jpg)
+
+e. H0 ditolak
+f. Ada perbedaan pada rata-ratanya
+
 ## Soal 4
 Membagi menjadi 3 grup
 ```R
-my_data <- read.delim(file.choose())
-
 my_data$Group = as.factor(my_data$Group)
 my_data$Group = factor(my_data$Group,labels = c("kucing oren", "kucing hitam", "kucing putih"))
 
@@ -123,3 +140,57 @@ ggplot(my_data, aes(x = Group, y = Length)) +
   ylab("panjang")
 ```
 ![](img/4j.jpg)
+
+## Soal 5
+```R
+install.packages("multcompView")
+library(readr)
+library(ggplot2)
+library(multcompView)
+library(dplyr)
+```
+a.
+```R
+my.data <- read_csv("data_no5.csv")
+
+qplot(x = Temp, y = Light, geom = "point", data = my.data) + facet_grid(.~Glass, labeller = label_both)
+```
+![](img/5a.jpg)
+
+b.
+```R
+my.data$Glass <- as.factor(my.data$Glass)
+my.data$Temp_Factor <- as.factor(my.data$Temp)
+
+anova <- aov(Light ~ Glass*Temp_Factor, data = my.data)
+summary(anova)
+```
+![](img/5b.jpg)
+
+c.
+```R
+data.sum <- group_by(my.data, Glass, Temp) %>%
+  summarise(mean = mean(Light), sd = sd(Light)) %>%
+  arrange(desc(mean))
+
+print(data.sum)
+```
+![](img/5c.jpg)
+
+d.
+```R
+TukeyHSD(anova)
+```
+![](img/5d.jpg)
+
+e.
+```R
+tukey.cld <- multcompLetters4(anova, tukey)
+print(tukey.cld)
+
+cld <- as.data.frame.list(tukey.cld$`Glass:Temp_Factor`)
+data.sum$Tukey <- cld$Letters
+print(data.sum)
+
+write.csv("GTL_sum.csv")
+```
